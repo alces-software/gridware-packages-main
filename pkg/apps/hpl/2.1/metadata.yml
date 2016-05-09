@@ -1,0 +1,93 @@
+:schema: 1
+:title: HPL
+:license: Modified Free http://www.netlib.org/benchmark/hpl/copyright.html
+:summary: A Portable Implementation of the High-Performance Linpack Benchmark for Distributed-Memory Computers
+:url: http://www.netlib.org/benchmark/hpl/
+:description: |
+  HPL is a software package that solves a (random) dense linear system
+  in double precision (64 bits) arithmetic on distributed-memory
+  computers. It can thus be regarded as a portable as well as freely
+  available implementation of the High Performance Computing Linpack
+  Benchmark.
+
+  The algorithm used by HPL can be summarized by the following keywords:
+
+    * Two-dimensional block-cyclic data distribution
+    * Right-looking variant of the LU factorization with row partial
+      pivoting featuring multiple look-ahead depths
+    * Recursive panel factorization with pivot search and column
+      broadcast combined
+    * Various virtual panel broadcast topologies
+    * Bandwidth reducing swap-broadcast algorithm
+    * Backward substitution with look-ahead of depth 1
+:group: Benchmarks
+:changelog: |
+  * Thu May  5 2016 - Ruan G. Ellis <ruan.ellis@alces-software.com>
+    - Updated distro dependencies for EL 
+    - Removed symlink in blas
+  * Wed May 14 2014 Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - Tidied up the description field; added title field
+  * Mon Mar  3 2014 James Donohue <james.donohue@alces-software.com>
+    - Added simple example script
+  * Wed Nov 21 2012 - Steve Norledge <steve.norledge@alces-software.com>
+    - First created
+:src: hpl-2.1.tar.gz
+:patches:
+  - alces-hpl.patch
+:type: apps
+:version: '2.1'
+:compilers:
+  gcc:
+    :build_name: Linux-gcc
+:requirements:
+  :runtime:
+    - mpi/openmpi
+  :build:
+    - mpi/openmpi
+    - libs/atlas
+:sources:
+  - 4node_hpl.alces.dat
+:compile: |
+  export TOPdir=`pwd`
+  make arch=<%= compiler[:build_name]%> <%= redirect :make %>
+:install: |
+  (cd bin && ln -snf <%=compiler[:build_name]%>/* .) <%= redirect(:install) %>
+  cp -pav . <%= dest_dir %> <%= redirect(:install) %>
+  mkdir -v <%= dest_dir %>/examples <%= redirect(:install) %>
+  cp -v <%= source('4node_hpl.alces.dat') %> <%= dest_dir %>/examples <%= redirect(:install) %>
+  BLAS_MAKE=`readlink <%= dest_dir %>/src/blas/Linux-gcc/Make.inc`
+  rm <%= dest_dir %>/src/blas/Linux-gcc/Make.inc
+  cp $BLAS_MAKE <%= dest_dir %>/src/blas/Linux-gcc/Make.inc
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin/
+  setenv ${appcaps}EXAMPLES ${appdir}/examples
+
+  prepend-path PATH ${appdir}/bin/
+  prepend-path MANPATH ${appdir}/man/
+:example_scripts:
+  - tags: ['script:type=batch']
+    name: 'hpl; tuned 4-node usage'
+    description: 'Execute HPL using an Alces-tuned input data file for 4-node/64-process operation'
+    template: 'script:stub:mpi-multinode'
+    facts:
+      hardMemoryLimit: 64G
+      multinodeNumNodes: 4
+    content: |
+      #############################################
+      # APPLICATION COMMANDS - change as required
+      #############################################
+      #
+      # For more information about configuring HPL see:
+      #   http://www.netlib.org/benchmark/hpl/
+
+      # Directory containing the HPL.dat input data file, tuned as required
+      # (An example is supplied in the HPLEXAMPLES directory)
+      HPLDAT_DIR="hpl"
+      mkdir -p "$HPLDAT_DIR"
+      cp "$HPLEXAMPLES/4node_hpl.alces.dat" "$HPLDAT_DIR/HPL.dat"
+
+      # Number of processes to start
+      NUM_PROCESSES=64
+
+      cd "$HPLDAT_DIR" && mpirun -np $NUM_PROCESSES xhpl
