@@ -15,8 +15,8 @@ env:
   matrix:
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[a-fA-F]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[g-lG-L]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[m-sM-S]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[t-zT-Z]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[m-qM-Q]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[r-zR-Z]
   #- cw_DIST=el6 cw_VERSION=1.5
 matrix:
   allow_failures:
