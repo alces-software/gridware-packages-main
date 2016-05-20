@@ -22,8 +22,7 @@ matrix:
   allow_failures:
   - env: cw_DIST=el6 cw_VERSION=1.5
 before_install:
-- git clone -b feature/main-repo-support https://github.com/alces-software/gridware-ci.git
-  .gridware-ci
+- git clone https://github.com/alces-software/gridware-ci.git .gridware-ci
 - curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install |
   bash
 - ".gridware-ci/build-container.sh main"
