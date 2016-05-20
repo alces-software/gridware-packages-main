@@ -1,0 +1,38 @@
+sudo: required
+dist: trusty
+services:
+- docker
+git:
+  submodules: false
+branches:
+  only:
+  - master
+env:
+  global:
+  - secure: UYQCa0IFU54QJi45cjYfnsoRgCT3g/LpUsB/3dqqEX4gsIzG5cK1CPlKqfogFNc8SpszwD0qju250diiSt3WviAtrfZHpwVwOYoadTonhz0r0lrzcMy6/lwqJeJqF9RNKO+G9HX/Hq7dHE6eTwS3WjtDecqrYl2g8PSxuDGGDn3cOJJ0goEzcRPQgig3OHp2/8xlrIcptxhPcwT6T9oIvS0pFdNAocCnmxVCJPifBreboOmEtGOOYhdfu4nVXJtnd1xmmMdtm+BEO7nOe4Oj1H1n0ghB8TSozc9MnjwfszkQAliBqDB2QIESehGWjgcGdd6k/CQydJfyxfE+pF9gG66WgVqjMMN28/PPiLd5s8JV126psDf03jcsXRS72r8xV3sf+6bU4odbjwNODfJ17ZqaGh/IypaYHBKzdfMyJ3drnf/gNkesX+fN9XMORl4IWa1w6Ywlq9L3r6KfgwklwAhllrbauVZnFmgFbu2fn8ph5QWfOEdse+vNPQF0Mub38Z24ABZlB+9BPb8Mtuu4cLpwZgD9FyyFqDDd0c5b97Dj1rRk+PUJ6+S9h+Y/w+4RBjq5/M9v5ceX4VEDLR5IEndMjQVqqkqJd6lUw53QeUZN/qpM/iBnWq8XXJtwV7I+2a1M2tZNSjyRNKDpEHMFYNnXmzuhHJ0n2EJzcmgTxRw=
+  - secure: A9SBFb4R8cukl/BqaDUstUt5ex13Fmk9gm+JJTSD3SO8CMVVAuz3UUwpJakMlx+uOicXZihUMbc9P7/Y3PiKy6sy+cl9HY8NvcFQ9OM3UE2YAFCAvC0YYTKrXoNcOiju0VgWehP3R2MnzTbuB6bvW/h8MVrTvKoC/TX8rOc6TCrdJF7+g4kr09PZSTRuyy+uNzEoRXKdZMCmAu0CnPgwu30tCwa1Y5PQzi9HxKRf5oWKkyVGU8TeSOcV78QoeX+bUDq7oK0zg44pUqmEL8P34vLd/tDYHGzMHy9+8U9IRICk33Cup7owXPS2c9k8hoD1r+Orw/rHn0D9Iz6s9F4Vw9a35Izcgq4LGKxymr3itlnadowJx5pQ6c4L0k0EreI5sSkACgXuUoMq63ZkQ6197dTFkbvdIaCDHDqWJE8V41S3EW5UitPNZQDZvdyDNZnLJ7ALcVT/9u6fhb19h9bfZp64ORIpwKo6XIOWOXYQdTzwSWTX3zM89qcKNcDPCe1xpk2HTFQv4pQRk3mHtIOg+BT6R1S5XM9Y7FKCHvfEdck8hYGGLJEc/b4RqEu2Bv//RdgMgUVhyqGMDDtabp2QksNGSvie+AJZZyvFhyvvL/pFNYE7V5rUQsV6ynzjigr+Nadx3CnnYRBbIcTs7QLC5/o6dJOvAM52A4eoqAniqf8=
+  - secure: j1lothgbNlojfEEHutogaFG99PDqbKFPnKPGgveA6bKygy14QOb6a9PmXJ97IGeBS9+xJRXdPdPJNqxQiHX8xQVN9Cf6ZhUCP9oXMy8HJggsaX0wYx0QaSRKVEoMyrNou1xnjD/wJ3gtA889oIKbhhPGhGkHM/Xt6jHCH70TryZY5qt78KX8dtZnDirPu64OS97dsGc+iuhVCfhaF5ffM3l9e4xIeZjkVhGd65ciu3iSG85HmolfuYdz9z/hn9Ao4ReOm+WSoXmasw9KGAznSiD1Wk0l+xhGRP5GKDuatVe4GMPh+zCwy8pOHmdHssCWp0R7A8rn/R2ttDWIJAMvkv7LDCJIqRIqvl293YutW806p+xp85nAQCHFXqx5fXdiUvXPywUIG76xNka+Jp39oxWtutfHzWsyjLaZtdZmce4WPHwcu6kdy5pubqNPg970VFv7EBAoy+AcDBSIu+n1pfeqosKuVVTsX6t4VyftUj31B73U/M5kWHqpIv6NiTAXZFJ7yoGNYmo8uWCVLGCWg/GaRSUcrHGIlHXvtkkEjBJqPj1ok30bbQMpDUJG5/Ewb/lMCSJPrSP8OGg81YSV/1TVrF1+qRcQGL3nzRvQzS5nuhT5eHFuLBf6to6qIA7l9zaFPi2uFIlby9KNG8jKonhXIO5mH1NTS3qFUpG9SNU=
+  matrix:
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[a-fA-F]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[g-lG-L]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[m-qM-Q]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[r-zR-Z]
+  #- cw_DIST=el6 cw_VERSION=1.5
+matrix:
+  allow_failures:
+  - env: cw_DIST=el6 cw_VERSION=1.5
+before_install:
+- git clone -b feature/main-repo-support https://github.com/alces-software/gridware-ci.git
+  .gridware-ci
+- curl -sL https://raw.githubusercontent.com/travis-ci/artifacts/master/install |
+  bash
+- ".gridware-ci/build-container.sh main"
+script:
+- ".gridware-ci/install-each-package.sh"
+- ".gridware-ci/upload-artifacts.sh main"
+after_failure:
+- ".gridware-ci/dump-logs.sh main"
+- echo "Build failed :'("
+notifications:
+  slack:
+    secure: Mcjf+ZOyC7Tnos0wCwXSU7wDWGdK2gMYxWJcS+YqwlSN+JZNS9fULPi2s1BsploCAOsXmrpv64gIn0VywgIq0OBKquDbBu3G8Hi0CKXgxyXipBqlT9eczYNo7+vxQsdnaguZv8q6k/8hFcrS8BdX0M4nCYIUIVY8a2qM6UTazdUIQ7i40hg5IWkgq/7QB2Nqu5XIHM5rQ6RauWPzlXp1nnQF6gVvDzRWf5TguHMJLRIPW4HogFDOo0f3EWyVjhN0NkzwcOY3jPhqWlsc7SZpCj7FFU4Bz9P95Ajh1sMEp9Vu87BzpTTPBwh+YK0+JWzLrfJ45aL2I9XAePNgBRbWmbRj5FsAXLvdiRjYizikT/9qr5jNMgYRYl4qcJDpiOzbwlid8kq5htGXfMP2LDjvxaubfZOAz5ZKv4ZBcMATsiHg+YmsG64Dc0TsfkBQxmW/UhAVgU8jA6VyiUtqzlAhIDfiNshQNnjgAaLEc99NOyHauckkFB6qJGCccsXh9cNIzuvu8a961jtjK2Hvs8TMLQvMIh2BQTkV1jK6Y3aDdKPJ0r/7wLu2hqAC9/IA5mo1Gae17Vrq5RxDlr5migRUNRDs8Sh2030SeBi35w+JoUor9iXhHwToZAWLomCCUX5vn3u0XHu4NQe3uM6LcPWxXAFEwPr/BvbE9zdGbJGL3/E=
