@@ -1,0 +1,86 @@
+---
+:schema: 1
+:title: landsatutil
+:license: Creative Commons Zero
+:summary: Search, download, and process Landsat imagery
+:url: https://github.com/developmentseed/landsat-util
+:description: |
+  Landsat-util has three main functions:
+   * Search for landsat tiles based on several search parameters.
+   * Download landsat images.
+   * Image processing and pan sharpening on landsat images.
+  These three functions have to be performed separately.
+:group: Bioinformatics
+:changelog: |
+  * Sun 15 May 2016  - Ruan G. Ellis <ruan.ellis@alces-software.com>
+    - First created
+:src: landsat-util-0.13.0.tar.gz 
+:src_dir: landsat-util-0.13.0
+:type: apps
+:version: '0.18.3'
+:requirements:
+  :tool:
+    - apps/pip >= 8.0.0
+  :build:
+    - apps/python
+    - libs/gdal
+    - libs/numpy >= 1.10.4
+    - libs/scipy >= 0.17.0
+    - libs/matplotlib >= 1.5.1 
+    - libs/scikit-image >= 0.12.3
+    - apps/setuptools
+  :runtime:
+    - apps/python
+    - libs/gdal
+    - libs/numpy >= 1.10.4
+    - libs/scipy >= 0.17.0
+    - libs/matplotlib >= 1.5.1
+    - libs/scikit-image >= 0.12.3
+    - apps/setuptools 
+:python_reqs:
+  - usgs==0.1.9
+  - requests==2.7.0
+  - python-dateutil==2.5.1
+  - termcolor==1.1.0
+  - rasterio==0.32.0
+  - six==1.8.0
+  - homura==0.1.3
+  - boto==2.39.0
+  - polyline==1.1
+  - geocoder==1.9.0
+:compilers:
+  gcc:
+:dependencies:
+  el:
+    - libcurl-devel
+:compile: |
+  export PYTHONDONTWRITEBYTECODE=true
+  # XXX - Should probably 'env' the hashbang in the scripts, but we
+  # don't in other places at the moment, so we don't here, for
+  # consistency.
+  PYTHONDEPSDIR=<%= dest_dir %>/python/lib/python2.7/site-packages
+  PYTHONPATH=$PYTHONDEPSDIR:$PYTHONPATH
+  mkdir -p $PYTHONDEPSDIR
+  export PYCURL_SSL_LIBRARY=nss
+  PYTHONUSERBASE=<%= dest_dir %>/python \
+  pip install pycurl --user --install-option="--prefix=" <%= redirect(:pythondeps) %>
+  #easy_install --install-dir $PYTHONDEPSDIR pycurl==7.43.0 <%= redirect(:python) %>
+  <% package.python_reqs.each do |dep| %>
+  PYTHONUSERBASE=<%= dest_dir %>/python \
+  pip install '<%= dep %>' --user --install-option="--prefix=" <%= redirect(:pythondeps) %>
+  #easy_install --install-dir $PYTHONDEPSDIR '<%= dep %>' <%= redirect(:python) %>
+  <% end %>
+  python setup.py build <%= redirect(:build) %>
+:install: |
+  export PYTHONDONTWRITEBYTECODE=true
+  PYTHONDEPSDIR=<%= dest_dir %>/python/lib/python2.7/site-packages
+  PYTHONPATH=$PYTHONDEPSDIR:$PYTHONPATH
+  python setup.py install --prefix <%= dest_dir %>/python <%= redirect(:pythoninstall) %>
+  cp -R <%= dest_dir %>/python/bin <%= dest_dir %>/bin <%= redirect(:installbins) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+  setenv ${appcaps}PYTHON ${appdir}/python
+
+  prepend-path PATH ${appdir}/bin
+  prepend-path PYTHONPATH ${appdir}/python/lib/python2.7/site-packages
