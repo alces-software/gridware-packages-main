@@ -13,10 +13,13 @@ env:
   - secure: A9SBFb4R8cukl/BqaDUstUt5ex13Fmk9gm+JJTSD3SO8CMVVAuz3UUwpJakMlx+uOicXZihUMbc9P7/Y3PiKy6sy+cl9HY8NvcFQ9OM3UE2YAFCAvC0YYTKrXoNcOiju0VgWehP3R2MnzTbuB6bvW/h8MVrTvKoC/TX8rOc6TCrdJF7+g4kr09PZSTRuyy+uNzEoRXKdZMCmAu0CnPgwu30tCwa1Y5PQzi9HxKRf5oWKkyVGU8TeSOcV78QoeX+bUDq7oK0zg44pUqmEL8P34vLd/tDYHGzMHy9+8U9IRICk33Cup7owXPS2c9k8hoD1r+Orw/rHn0D9Iz6s9F4Vw9a35Izcgq4LGKxymr3itlnadowJx5pQ6c4L0k0EreI5sSkACgXuUoMq63ZkQ6197dTFkbvdIaCDHDqWJE8V41S3EW5UitPNZQDZvdyDNZnLJ7ALcVT/9u6fhb19h9bfZp64ORIpwKo6XIOWOXYQdTzwSWTX3zM89qcKNcDPCe1xpk2HTFQv4pQRk3mHtIOg+BT6R1S5XM9Y7FKCHvfEdck8hYGGLJEc/b4RqEu2Bv//RdgMgUVhyqGMDDtabp2QksNGSvie+AJZZyvFhyvvL/pFNYE7V5rUQsV6ynzjigr+Nadx3CnnYRBbIcTs7QLC5/o6dJOvAM52A4eoqAniqf8=
   - secure: j1lothgbNlojfEEHutogaFG99PDqbKFPnKPGgveA6bKygy14QOb6a9PmXJ97IGeBS9+xJRXdPdPJNqxQiHX8xQVN9Cf6ZhUCP9oXMy8HJggsaX0wYx0QaSRKVEoMyrNou1xnjD/wJ3gtA889oIKbhhPGhGkHM/Xt6jHCH70TryZY5qt78KX8dtZnDirPu64OS97dsGc+iuhVCfhaF5ffM3l9e4xIeZjkVhGd65ciu3iSG85HmolfuYdz9z/hn9Ao4ReOm+WSoXmasw9KGAznSiD1Wk0l+xhGRP5GKDuatVe4GMPh+zCwy8pOHmdHssCWp0R7A8rn/R2ttDWIJAMvkv7LDCJIqRIqvl293YutW806p+xp85nAQCHFXqx5fXdiUvXPywUIG76xNka+Jp39oxWtutfHzWsyjLaZtdZmce4WPHwcu6kdy5pubqNPg970VFv7EBAoy+AcDBSIu+n1pfeqosKuVVTsX6t4VyftUj31B73U/M5kWHqpIv6NiTAXZFJ7yoGNYmo8uWCVLGCWg/GaRSUcrHGIlHXvtkkEjBJqPj1ok30bbQMpDUJG5/Ewb/lMCSJPrSP8OGg81YSV/1TVrF1+qRcQGL3nzRvQzS5nuhT5eHFuLBf6to6qIA7l9zaFPi2uFIlby9KNG8jKonhXIO5mH1NTS3qFUpG9SNU=
   matrix:
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[a-fA-F]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[g-lG-L]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[m-qM-Q]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[r-zR-Z]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[a-bA-B]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[c-fC-F]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[g-kG-K]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[l-nL-N]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[p-qP-Q]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[r-sR-S]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[t-zT-ZoO]
   #- cw_DIST=el6 cw_VERSION=1.5
 matrix:
   allow_failures:
