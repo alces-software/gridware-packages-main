@@ -15,8 +15,13 @@
 :changelog: |
   * Thu Jun  9 2016 Mark J. Titorenko <mark.titorenko@alces-software.com>
     - Added zlib dependencies for EL
-  * Tue May  3 2016 - Ruan G. Ellis <ruan.ellis@alces-software.com>
+  * Tue Jun  7 2016 Mark J. Titorenko <mark.titorenko@alces-software.com>
     - Added distro dependencies for EL
+  * Fri May 29 2015 Ruan G. Ellis <ruan.ellis@alces-software.com>
+    - update to 1.58.0
+  * Sat Jan 24 2015 Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - update to 1.57.0
+    - reworked tools installation as structure has changed since 1.56.0
   * Mon Sep  1 2014 Ben Armston <ben.armston@alces-software.com>
     - update to 1.55.0
   * Fri May 10 2013 Mark J. Titorenko <mark.titorenko@alces-software.com>
@@ -38,17 +43,15 @@
     - add latest link
   * Tue Feb 22 2011 Steve Norledge
     - First created
-:src: boost_1_55_0.tar.bz2
-:src_dir: boost_1_55_0
+:src: boost_1_58_0.tar.bz2
+:src_dir: boost_1_58_0
 :type: libs
-:version: '1.55.0'
+:version: '1.58.0'
 :requirements:
   :runtime: mpi/openmpi
-  :build: 
+  :build:
     - mpi/openmpi
     - apps/python
-:compilers:
-  gcc:
 :dependencies:
   :build:
     el:
@@ -58,15 +61,18 @@
     el:
       - bzip2-libs
       - zlib
+:compilers:
+  gcc:
 :compile: |
   ./bootstrap.sh --prefix=<%= dest_dir %> <%= redirect(:configure) %>
   echo "using mpi ;" >> project-config.jam
   ./b2 stage <%= redirect(:stage) %>
-  ./b2 install <%= redirect(:install) %>
-  mkdir -p <%= dest_dir%>/bin
-  cp -av b2 <%= dest_dir%>/bin/.
-  cp -av bjam <%= dest_dir%>/bin/.
-  cp -av tools/build/v2 <%=dest_dir%>/share
+  ./b2 install --prefix=<%= dest_dir %> <%= redirect(:install) %>
+  mkdir -p <%= dest_dir%>/{bin,share}
+  cp -av b2 <%= dest_dir%>/bin <%= redirect(:install) %>
+  cp -av bjam <%= dest_dir%>/bin <%= redirect(:install) %>
+  cp -Rv tools <%=dest_dir%>/share <%= redirect(:install) %>
+  cp -Rv doc <%=dest_dir%>/doc <%= redirect(:install) %>
 :module: |
   setenv ${appcaps}DIR ${appdir}
   setenv ${appcaps}LIB ${appdir}/lib
@@ -74,7 +80,7 @@
   setenv ${appcaps}BIN ${appdir}/bin
 
   setenv BOOST_ROOT ${appdir}
-  setenv BOOST_BUILD_PATH ${appdir}/share
+  setenv BOOST_BUILD_PATH ${appdir}/share/tools/build
 
   prepend-path PATH ${appdir}/bin
   prepend-path LD_LIBRARY_PATH ${appdir}/lib
