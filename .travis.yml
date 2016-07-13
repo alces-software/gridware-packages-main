@@ -15,7 +15,8 @@ env:
   matrix:
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[a-bA-B]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[c-fC-F]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[g-kG-K]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[gG]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[h-kH-K]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[lL]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[mM]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[nN]
