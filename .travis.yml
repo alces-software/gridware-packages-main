@@ -18,14 +18,17 @@ env:
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[gG]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[h-kH-K]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[lL]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[mM]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[mM][a-eA-E]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[mM][f-zF-Z]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[nN]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[Pp][a-x]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[Pp][y-z]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[pP][a-xA-X]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[pP][y-zY-Z]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[qQ]
   - cw_DIST=el7 cw_VERSION=1.5 pattern=[rR]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[sS]
-  - cw_DIST=el7 cw_VERSION=1.5 pattern=[t-zT-ZoO]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[sS][a-eA-E]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[sS][f-zF-z]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[tT]
+  - cw_DIST=el7 cw_VERSION=1.5 pattern=[u-zU-ZoO]
   #- cw_DIST=el6 cw_VERSION=1.5
 matrix:
   allow_failures:
