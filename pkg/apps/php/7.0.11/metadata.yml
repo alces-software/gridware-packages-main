@@ -1,0 +1,65 @@
+---
+:schema: 1
+:license: PHP License
+:summary: A widely-used general-purpose scripting language that is especially suited for Web development
+:url: http://www.php.net/
+:description: |
+  PHP (recursive acronym for PHP: Hypertext Preprocessor) is a
+  widely-used open source general-purpose scripting language that is
+  especially suited for web development and can be embedded into HTML.
+:group: Languages
+:changelog: |
+  * Tue Sep 27 2016 - Ruan G. Ellis <ruan.ellis@alces-software.com>
+    - Updated to v7.0.11 version
+    - Added share directory for PHP extensions
+  * Tue Aug 21 2012 - Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - First created
+:src: php-7.0.11.tar.gz
+:type: apps
+:version: '7.0.11'
+:compilers:
+  gcc:
+:dependencies:
+  el:
+    - libxml2-devel
+    - gcc-c++
+:compile: |
+  ./configure --prefix=<%= dest_dir %> <%= redirect(:configure) %>
+  make <%= redirect(:make) %>
+:install: |
+  make install <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+
+  prepend-path PATH ${appdir}/bin
+  prepend-path MANPATH ${appdir}/php/man
+  prepend-path LD_LIBRARY_PATH ${appdir}/lib
+  prepend-path PHP_INI_SCAN_DIR $::env(HOME)/gridware/share/php/conf.d
+
+  set php_user_libs $::env(HOME)/gridware/share/php/lib/
+  set php_user_conf_dir $::env(HOME)/gridware/share/php/conf.d
+ 
+  if { $::env(USER) != "root" } {
+    if { [module-info mode load] } {
+      # make the user libs directory if it doesn't exist
+      if { ! [file exists "${php_user_libs}"] } {
+        file mkdir "${php_user_libs}"
+      }
+    }
+  }
+
+  if { $::env(USER) != "root" } {
+    if { [module-info mode load] } {
+      # make the user libs directory if it doesn't exist
+      if { ! [file exists "${php_user_conf_dir}"] } {
+        file mkdir "${php_user_conf_dir}"
+      }
+      if { ! [file exists "${php_user_conf_dir}/php.ini"] } {
+          set file [open ${php_user_conf_dir}/php.ini a]
+          puts $file "extension_dir=$php_user_libs"
+          close $file
+      }
+    }
+  }
+  
