@@ -1,0 +1,79 @@
+---
+:schema: 1
+:title: eXpress
+:license: Artistic License 2.0
+:summary: Streaming tool for quantifying the abundances of a set of target sequences from sampled subsequences
+:url: http://bio.math.berkeley.edu/eXpress/overview.html
+:description: |
+  eXpress is a streaming tool for quantifying the abundances of a set
+  of target sequences from sampled subsequences. Example applications
+  include transcript-level RNA-Seq quantification,
+  allele-specific/haplotype expression analysis (from RNA-Seq),
+  transcription factor binding quantification in ChIP-Seq, and
+  analysis of metagenomic data. It is based on an online-EM algorithm
+  that results in space (memory) requirements proportional to the
+  total size of the target sequences and time requirements that are
+  proportional to the number of sampled fragments. Thus, in
+  applications such as RNA-Seq, eXpress can accurately quantify much
+  larger samples than other currently available tools greatly reducing
+  computing infrastructure requirements. eXpress can be used to build
+  lightweight high-throughput sequencing processing pipelines when
+  coupled with a streaming aligner (such as Bowtie), as output can be
+  piped directly into eXpress, effectively eliminating the need to
+  store read alignments in memory or on disk.
+:group: Bioinformatics
+:changelog: |
+  * Mon Sep 26 2016 - Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Mon Sep  1 2014 Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - First created
+:src: express-1.5.1-src.tgz
+:src_dir: express-1.5.1-src
+:type: apps
+:version: '1.5.1'
+:patches:
+  - fix-cmake-libraries.patch1
+:requirements:
+  :tool:
+    - apps/cmake
+  :build:
+    - apps/bamtools
+    - libs/boost
+  :runtime:
+    - apps/samtools
+    - apps/bowtie
+:compilers:
+  gcc:
+:compile: |
+  ln -s "$BAMTOOLSDIR" bamtools
+  mkdir build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX:PATH=<%= dest_dir %> \
+      -DBOOST_ROOT:PATH=$BOOSTDIR \
+      .. <%= redirect(:configure) %>
+  make <%= redirect(:compile) %>
+:sources:
+  - express.sh.md
+  - express.sh.tpl
+:install: |
+  mkdir -p <%= dest_dir %>/{doc,share}
+  cp -Rv sample_data <%= dest_dir %>/share <%= redirect(:install) %>
+  cp -Rv express-doc.pdf LICENSE README <%= dest_dir %>/doc <%= redirect(:install) %>
+  cd build
+  make install <%= redirect(:install) %>
+
+  mkdir -pv <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  mkdir -pv <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  cp -v <%= source('express.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('express.sh.md') %> <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+  setenv ${appcaps}DOC ${appdir}/doc
+  setenv ${appcaps}SHARE ${appdir}/share
+
+  setenv ${appcaps}TEMPLATES ${appdir}/share/clusterware/templates
+  setenv ${appcaps}EXAMPLEDOCS ${appdir}/share/clusterware/guides
+  prepend-path CW_DOCPATH ${appdir}/share/clusterware
+
+  prepend-path PATH ${appdir}/bin
