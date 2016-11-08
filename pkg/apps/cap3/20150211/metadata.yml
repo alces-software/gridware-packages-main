@@ -1,0 +1,69 @@
+---
+:schema: 1
+:title: CAP3
+:license: NONFREE - Free for non-profit organizations; see http://seq.cs.iastate.edu/
+:summary: Sequence Assembly Program
+:url: http://seq.cs.iastate.edu/cap3.html
+:description: |
+  An improved version of the CAP sequence assembly program. The following
+  improvements have been made:
+
+  1. Use of forward-reverse constraints to correct assembly errors and link
+  contigs.
+
+  2. Use of base quality values in alignment of sequence reads.
+
+  3. Automatic clipping of 5' and 3' poor regions of reads.
+
+  4. Generation of assembly results in ace file format for Consed.
+
+  5. CAP3 can be used in GAP4 of the Staden package.
+
+  These improvements allow CAP3 to take longer sequences of higher errors and
+  produce more accurate consensus sequences.
+:group: Bioinformatics
+:changelog: |
+  * Mon Sep 26 2016 - Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Mon Feb 16 2014 - Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - Updated to latest release, 2015-02-11
+    - Removed control character from example script
+  * Mon Jul 28 2014 - Ben Armston <ben.armston@alces-software.com>
+    - First created
+:src: cap3.linux.x86_64.tar
+:src_dir: CAP3
+:type: apps
+:version: '20150211'
+:compilers:
+  bin:
+:compile: |
+  # no-op, this is a binary package
+:sources:
+  - cap3.sh.md
+  - cap3.sh.tpl
+:install: |
+  mkdir -p <%= dest_dir %>/bin <%= redirect(:install) %>
+  mkdir -p <%= dest_dir %>/doc <%= redirect(:install) %>
+
+  cp -v cap3 formcon <%= dest_dir %>/bin <%= redirect(:install) %>
+  cp -v doc.txt README aceform <%= dest_dir %>/doc <%= redirect(:install) %>
+  cp -vr example <%= dest_dir %> <%= redirect(:install) %>
+
+  mv <%= dest_dir %>/example <%= dest_dir %>/examples
+
+  mkdir -pv <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  mkdir -pv <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  cp -v <%= source('cap3.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('cap3.sh.md') %> <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+  setenv ${appcaps}DOC ${appdir}/doc
+  setenv ${appcaps}EXAMPLES ${appdir}/examples
+
+  setenv ${appcaps}TEMPLATES ${appdir}/share/clusterware/templates
+  setenv ${appcaps}EXAMPLEDOCS ${appdir}/share/clusterware/guides
+  prepend-path CW_DOCPATH ${appdir}/share/clusterware
+
+  prepend-path PATH ${appdir}/bin
+
