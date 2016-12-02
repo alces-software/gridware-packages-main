@@ -1,0 +1,58 @@
+---
+:schema: 1
+:title: FastUniq
+:license: UKNOWN; see http://sourceforge.net/projects/fastuniq/
+:summary: an ultrafast de novo duplicates removal tool for paired short DNA sequences
+:url: http://sourceforge.net/projects/fastuniq/
+:description: |
+  FastUniq as an ultrafast de novo tool for removal of duplicates in paired
+  short DNA sequence reads in FASTQ format. FastUniq identifies duplicates
+  by comparing sequences between read pairs and does not require complete
+  genome sequences as prerequisites. FastUniq is capable of simultaneously
+  handling reads with different lengths and results in highly efficient 
+  running time.
+:type: apps
+:group: Bioinformatics
+:changelog: |
+  * Tue Sep 27 2016 - Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Fri Jul 4 2014 - Ben Armston <ben.armston@alces-software.com>
+    - First created
+:src: FastUniq-1.1.tar.gz
+:src_dir: 'FastUniq/source'
+:version: '1.1'
+:compilers:
+  gcc:
+:compile: |
+  make <%= redirect(:compile) %>
+:sources:
+  - fastuniq.sh.md
+  - fastuniq.sh.tpl
+:install: |
+  mkdir -p <%= dest_dir %>/bin
+  mkdir -p <%= dest_dir %>/doc
+  mkdir -p <%= dest_dir %>/examples
+
+  # Adjust the paths in the example input file list so that it contains
+  # absolute paths to the files.
+  sed -i 's,^,<%= dest_dir %>/examples/,' ../example/input_list.txt <%= redirect(:install) %>
+
+  install fastuniq      <%= dest_dir %>/bin     <%= redirect(:install) %>
+  install ../example/*  <%= dest_dir %>/examples <%= redirect(:install) %>
+  install ../README.txt <%= dest_dir %>/doc     <%= redirect(:install) %>
+
+  mkdir -pv <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  mkdir -pv <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  cp -v <%= source('fastuniq.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('fastuniq.sh.md') %> <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+  setenv ${appcaps}DOC ${appdir}/doc
+  setenv ${appcaps}EXAMPLES ${appdir}/examples
+
+  setenv ${appcaps}TEMPLATES ${appdir}/share/clusterware/templates
+  setenv ${appcaps}EXAMPLEDOCS ${appdir}/share/clusterware/guides
+  prepend-path CW_DOCPATH ${appdir}/share/clusterware
+
+  prepend-path PATH ${appdir}/bin
