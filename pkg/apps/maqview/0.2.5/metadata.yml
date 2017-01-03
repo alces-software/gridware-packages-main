@@ -1,0 +1,76 @@
+---
+:schema: 1
+:title: M.A.Q Viewer
+:license: GPLv2
+:summary: Graphical read alignement viewer
+:url: http://maq.sourceforge.net/maqview.shtml
+:description: |
+  Maqview is graphical read alignment viewer. It is specifically
+  designed for the Maq alignment file and allows you to see the
+  mismatches, base qualities and mapping qualities. Maqview is nothing
+  fancy as Consed or GAP, but just a simple viewer for you to see what
+  happens in a particular region.
+
+  In comparison to tgap-maq, the text-based read alignment viewer
+  writen by James Bonfield, Maqview is faster and takes up much less
+  memory and disk space in indexing. This is possibly because tgap
+  aims to be a general-purpose viewer but Maqview fully makes use of
+  the fact that a Maq alignment file has already been sorted. Maqview
+  is also efficient in viewing and provides a command-line tool to
+  quickly retrieve any region in an Maq alignment file.
+:group: Bioinformatics
+:changelog: |
+  * Mon Nov 21 2016 Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Mon May 19 2014 - Ben Armston <ben.armston@alces-software.com>
+    - Correct description of example data
+  * Thu May 15 2014 - James Donohue <james.donohue@alces-software.com>
+    - Add name and description to example script
+  * Mon May 12 2014 - Ben Armston <ben.armston@alces-software.com>
+    - Added example script
+  * Wed Oct 10 2012 - Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - First created
+:src: maqview-0.2.5.tar.gz
+:src_dir: maqview
+:type: apps
+:version: '0.2.5'
+:dependencies:
+  el:
+    - gcc-c++
+    - automake
+    - glibc-devel
+    - freeglut-devel
+    - mesa-libGL-devel
+    - compat-libstdc++-33
+    - libstdc++-devel
+:compilers:
+  gcc:
+:compile: |
+  ./autogen.sh <%= redirect(:autogen) %>
+  ./configure --prefix=<%= dest_dir %> <%= redirect(:configure) %>
+  # remove instruction to link libglut statically - there is no static
+  # version of libglut available on modern RHEL derivatives.
+  sed -i -e 's|^GLLIBS =.*|GLLIBS = -lglut -Wl,-Bdynamic -lGL -lGLU -lm|g' Makefile
+
+  sed -i -e '496s|direct_insert_aux|this->direct_insert_aux|' stdhash.hh
+
+  make <%= redirect(:make) %>
+:sources:
+  - maqview.sh.md
+  - maqview.sh.tpl
+:install: |
+  make install <%= redirect(:install) %>
+
+  mkdir -pv <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  mkdir -pv <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  cp -v <%= source('maqview.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('maqview.sh.md') %> <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+
+  prepend-path PATH ${appdir}/bin
+
+  setenv ${appcaps}TEMPLATES ${appdir}/share/clusterware/templates
+  setenv ${appcaps}EXAMPLEDOCS ${appdir}/share/clusterware/guides
+  prepend-path CW_DOCPATH ${appdir}/share/clusterware
