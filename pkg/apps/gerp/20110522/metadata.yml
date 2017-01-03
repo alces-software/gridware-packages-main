@@ -1,0 +1,63 @@
+---
+:schema: 1
+:title: 'GERP++'
+:license: GPLv3+
+:summary: Identifies constrained elements in multiple alignments by quantifying substitution deficits
+:url: http://mendel.stanford.edu/SidowLab/downloads/gerp/index.html
+:description: |
+  GERP identifies constrained elements in multiple alignments by
+  quantifying substitution deficits. These deficits represent
+  substitutions that would have occurred if the element were neutral
+  DNA, but did not occur because the element has been under functional
+  constraint. We refer to these deficits as "Rejected
+  Substitutions". Rejected substitutions are a natural measure of
+  constraint that reflects the strength of past purifying selection on
+  the element.
+
+  GERP estimates constraint for each alignment column; elements are
+  identified as excess aggregations of constrained columns. A
+  false-positive rate (which is user-settable) is calculated using
+  'shuffled' alignments in which the order of columns is randomized.
+:group: Bioinformatics
+:changelog: |
+  * Fri Nov  4 2016 Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Tue Oct  7 2014 - Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - First created
+:src: gerp++.tar.gz
+:type: apps
+:version: '20110522'
+:src_dir: .
+:patches:
+  - cplusplus-includes.patch1
+:dependencies:
+  el:
+    - gcc-c++
+:compilers:
+  gcc:
+:sources:
+  - gerp.sh.md
+  - gerp-1-compute-rs-score.sh.tpl
+  - gerp-2-find-elements.sh.tpl
+:compile: |
+  make <%= redirect(:make) %>
+:install: |
+  mkdir -p <%= dest_dir %>/{bin,doc}
+  install -v -D -m 0755 gerpcol gerpelem <%= dest_dir %>/bin/ <%= redirect(:install) %>
+  install -v -D -m 0644 README.txt <%= dest_dir %>/doc/ <%= redirect(:install) %>
+
+  mkdir -pv <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  mkdir -pv <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  cp -v <%= source('gerp-1-compute-rs-score.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('gerp-2-find-elements.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('gerp.sh.md') %> <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+  setenv ${appcaps}DOC ${appdir}/doc
+
+  prepend-path PATH ${appdir}/bin
+
+  setenv ${appcaps}TEMPLATES ${appdir}/share/clusterware/templates
+  setenv ${appcaps}EXAMPLEDOCS ${appdir}/share/clusterware/guides
+  prepend-path CW_DOCPATH ${appdir}/share/clusterware
