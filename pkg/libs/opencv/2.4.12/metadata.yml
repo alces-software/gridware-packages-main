@@ -68,6 +68,9 @@
     - apps/ffmpeg
 :compilers:
   gcc:
+:dependencies:
+  el:
+    - libjpeg-turbo 
 :compile: |
   mkdir build
   cd build
