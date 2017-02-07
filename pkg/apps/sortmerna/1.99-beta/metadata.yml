@@ -1,0 +1,74 @@
+---
+:schema: 1
+:title: SortMeRNA
+:license: LGPL
+:summary: SortMeRNA is a software designed to rapidly filter ribosomal RNA fragments from metatranscriptomic data produced by next-generation sequencers.
+:url: http://bioinfo.lifl.fr/RNA/sortmerna/index.php
+:description: |
+  SortMeRNA is a software designed to rapidly filter ribosomal RNA fragments
+  from metatranscriptomic data produced by next-generation sequencers. It is
+  capable of handling large RNA databases and sorting out all fragments
+  matching to the database with high accuracy and specificity.
+
+  SortMeRNA takes as input a file of reads (fasta or fastq format) and an rRNA
+  database (constructed using indexdb_rna (and buildtrie in versions <1.99
+  beta), and sorts apart the matching and non-matching reads into two files
+  specified by the user. Please refer to the user manual below for examples.
+
+  If you use SortMeRNA, please cite: Kopylova E., Noé L. and Touzet H.,
+  "SortMeRNA: Fast and accurate filtering of ribosomal RNAs in
+  metatranscriptomic data", Bioinformatics (2012), doi:
+  10.1093/bioinformatics/bts611.
+:type: apps
+:group: Bioinformatics
+:changelog: |
+  * Thu Jan 26 2017 - Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Mon Jul 7 2014 - Ben Armston <ben.armston@alces-software.com>
+    - First created
+:src: sortmerna-1.99-beta.tar.gz
+:src_dir: 'sortmerna-1.99-beta'
+:version: '1.99-beta'
+:dependencies:
+  el:
+    - gcc-c++
+:compilers:
+  gcc:
+:sources:
+  - sortmerna.md
+  - sortmerna.sh.tpl
+:compile: |
+  # Prevent make install from failing due to header files being mentioned multiple times.
+  # This sed command removes everything on the line after 'include_HEADERS = '
+  # and joins the next line to it.
+  sed -i  's/^\(include_HEADERS = \).*/\1/ ; /^include_HEADERS = /N ; s/^\(include_HEADERS = \)*\n/\1/' Makefile.in 
+  ./configure --prefix <%= dest_dir %> <%= redirect(:compile) %>
+  make <%= redirect(:compile) %>
+:install: |
+  make install <%= redirect(:install) %>
+
+  # Remove the include directory. The make install routine does not include
+  # any object files making the include headers rather pointless.
+  rm -rf --one-file-system <%= dest_dir %>/include
+
+  mkdir -p <%= dest_dir %>/doc <%= redirect(:install) %>
+  install SortMeRNA-user-manual-v1.99-beta.pdf <%= dest_dir %>/doc <%= redirect(:install) %>
+
+  mkdir -p <%= dest_dir %>/example <%= redirect(:install) %>
+  install rRNA_databases/*.fasta <%= dest_dir %>/example <%= redirect(:install) %>
+
+  mkdir -pv <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  mkdir -pv <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('sortmerna.md') %> <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  cp -v <%= source('sortmerna.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+  setenv ${appcaps}DOC ${appdir}/doc
+  setenv ${appcaps}EXAMPLE ${appdir}/example
+
+  prepend-path PATH ${appdir}/bin
+
+  setenv ${appcaps}EXAMPLEDOCS ${appdir}/share/clusterware/guides
+  setenv ${appcaps}TEMPLATES ${appdir}/share/clusterware/templates
+  prepend-path CW_DOCPATH ${appdir}/share/clusterware

@@ -1,0 +1,69 @@
+---
+:schema: 1
+:license: OTHER - see http://trilinos.org/download/license/
+:title: Trilinos
+:summary: Algorithms for the solution of multi-physics engineering and scientific problems
+:url: http://trilinos.org/
+:description: |
+  The Trilinos Project is an effort to develop and implement robust algorithms
+  and enabling technologies using modern object-oriented software design, while
+  still leveraging the value of established libraries such as PETSc,
+  Metis/ParMetis, SuperLU, Aztec, the BLAS and LAPACK. It emphasizes abstract
+  interfaces for maximum flexibility of component interchanging, and provides a
+  full-featured set of concrete classes that implement all abstract interfaces.
+:group: Libraries
+:changelog: |
+  * Mon Oct 31 2016 Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Tue Mar 31 2015 - James Donohue <james.donohue@alces-software.com>
+    - First created
+:src: trilinos-10.0.2-Source.tar.gz
+:src_dir: trilinos-10.0.2-Source
+:type: libs
+:version: '10.0.2'
+:requirements:
+  :tool: apps/cmake
+  :build:
+    - libs/blas
+    - libs/lapack
+:compilers:
+  gcc:
+:patches:
+  - Teuchos_ArrayViewDecl.hpp.patch
+  - Teuchos_RCP.hpp.patch
+  - Sacado_TemplateManager.hpp.patch
+:compile: |
+  mkdir build
+  cd build
+
+  cmake \
+    -D CMAKE_INSTALL_PREFIX:PATH=<%= dest_dir %> \
+    -D CMAKE_BUILD_TYPE:STRING=RELEASE \
+    -D Trilinos_ENABLE_Epetra:BOOL=ON \
+    -D Trilinos_ENABLE_Teuchos:BOOL=ON \
+    -D Trilinos_ENABLE_Ifpack:BOOL=ON \
+    -D Trilinos_ENABLE_EpetraExt:BOOL=ON \
+    -D Trilinos_ENABLE_NOX:BOOL=ON \
+    -D Trilinos_ENABLE_AztecOO:BOOL=ON \
+    -D Trilinos_ENABLE_ML:BOOL=ON \
+    -D Trilinos_ENABLE_Amesos:BOOL=ON \
+    -D Trilinos_ENABLE_Komplex:BOOL=ON \
+    -D Trilinos_ENABLE_Sacado:BOOL=ON \
+    -D Sacado_ENABLE_EXAMPLES:STRING=OFF \
+    -D Sacado_ENABLE_FEApp:BOOL=OFF \
+    -D Trilinos_ENABLE_Triutils:BOOL=ON \
+    -D BLAS_LIBRARY_DIRS=${BLASDIR} \
+    -D LAPACK_LIBRARY_DIRS=${LAPACKDIR} \
+    .. <%= redirect(:cmake) %>
+
+  make <%= redirect(:make) %>
+:install: |
+  mkdir -p <%= dest_dir %>/doc
+  cp README RELEASE_NOTES CHANGELOG <%= dest_dir %>/doc
+  cd build
+  make install <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}INCLUDE ${appdir}/include
+  setenv ${appcaps}LIB ${appdir}/lib
+  setenv ${appcaps}DOC ${appdir}/doc

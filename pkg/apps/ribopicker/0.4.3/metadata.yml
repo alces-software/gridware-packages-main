@@ -1,0 +1,86 @@
+---
+:schema: 1
+:license: GPLv3
+:summary: Identify and remove rRNA sequences from metagenomic and metatranscriptomic datasets
+:url: http://ribopicker.sourceforge.net/
+:description: |
+  The majority of RNA recovered in metatranscriptomic studies is ribosomal RNA
+  (rRNA), not mRNA, often exceeding 90% of the total reads (Stewart et al.,
+  2010; doi:10.1038/ismej.2010.18). Even after various treatments prior to
+  sequencing, the observed rRNA content decreases only slightly (Hei et al.,
+  2010; doi:10.1038/nmeth.1507). It is estimated that misannotations of rRNA
+  as proteins may cause up to 90% false positive matches of rRNA-like
+  sequences in metatranscriptomic studies (Tripp et al., 2011;
+  doi:10.1093/nar/gkr576). Those false positive matches are a serious concern
+  for downstream analysis, possibly causing erroneous conclusions. Therefore,
+  the removal of rRNA-like sequences presents a necessary step for all
+  metatranscriptomic projects.
+
+  riboPicker is distributed under the GNU Public License (GPL). All its source
+  codes are freely available to both academic and commercial users. The latest
+  version can be downloaded at the SourceForge download page.
+:group: Bioinformatics
+:changelog: |
+  * Thu Feb 2  2017 - Ruan G. Ellis <ruan.ellis@alces-software.com>
+    - Added perl-Data-Dumper distro dependency for EL
+  * Tue Jan 31 2017 - Ruan G. Ellis <ruan.ellis@alces-software.com>
+    - Added distro dependencies for EL
+  * Wed Jan 25 2017 - Andrew Provis <andrew.provis@alces-software.com>
+    - Corrected mistake with example template where module was not loaded when run
+  * Fri Jan 20 2017 - Andrew Provis <andrew.provis@alces-software.com>
+    - Updated example templates to Clusterware literal scripts
+  * Fri Sep  5 2014 - Mark J. Titorenko <mark.titorenko@alces-software.com>
+    - Added galaxy-compatible patched version of the ribopicker tool
+      <http://sourceforge.net/p/ribopicker/bugs/6/>
+  * Tue Sep  2 2014 - James Donohue <james.donohue@alces-software.com>
+    - First created
+:sources:
+  - bwa-0.5.9.tar.bz2
+  - ribopicker-galaxy.patch
+  - ribopicker.md
+  - ribopicker.sh.tpl
+:src: ribopicker-standalone-0.4.3.tar.gz
+:src_dir: ribopicker-standalone-0.4.3
+:type: apps
+:version: '0.4.3'
+:dependencies:
+  el:
+    - zlib-devel
+    - perl
+    - perl-Data-Dumper
+:compilers:
+  gcc:
+:compile: |
+  # Generate a galaxy-compatible version of the ribopicker tool
+  cp ribopicker.pl ribopicker-galaxy.pl
+  patch -p0 < <%= source('ribopicker-galaxy.patch') %>
+  # Rebuild modified BWA using original source and riboPicker patches
+  mv -v bwa64 bwa64.bundled <%= redirect(:compile) %>
+  tar -xf <%= source('bwa-0.5.9.tar.bz2') %> <%= redirect(:compile) %>
+  cd bwa-0.5.9
+  /bin/cp -fv ../bwasw_modified_source/* . <%= redirect(:compile) %>
+  make <%= redirect(:compile) %>
+  mv -v bwa ../bwa64 <%= redirect(:compile) %>
+:install: |
+  mkdir -p <%= dest_dir %>/{bin,var,doc}
+  sed -i -e 's|#!/usr/bin/perl.*|#!/usr/bin/env perl|g' ribopicker.pl ribopicker-galaxy.pl
+  sed -i -e "s|'db/'|'<%= dest_dir %>/var/db/'|g" -e "s|'./'|'<%= dest_dir %>/bin/'|g" riboPickerConfig.pm
+  chmod a+x ribopicker.pl ribopicker-galaxy.pl
+  cp -v ribopicker.pl ribopicker-galaxy.pl riboPickerConfig.pm bwa64 <%= dest_dir %>/bin <%= redirect(:install) %>
+  cp -v COPYING ChangeLog README* test_input.fasta <%= dest_dir %>/doc <%= redirect(:install) %>
+  cp -r db <%= dest_dir %>/var
+
+  mkdir -pv <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  mkdir -pv <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+  cp -v <%= source('ribopicker.md') %> <%= dest_dir %>/share/clusterware/guides <%= redirect(:install) %>
+  cp -v <%= source('ribopicker.sh.tpl') %> <%= dest_dir %>/share/clusterware/templates <%= redirect(:install) %>
+:module: |
+  setenv ${appcaps}DIR ${appdir}
+  setenv ${appcaps}BIN ${appdir}/bin
+  setenv ${appcaps}DOC ${appdir}/doc
+
+  prepend-path PATH ${appdir}/bin
+
+  setenv ${appcaps}TEMPLATES ${appdir}/share/clusterware/templates
+  setenv ${appcaps}EXAMPLEDOCS ${appdir}/share/clusterware/guides
+  prepend-path CW_DOCPATH ${appdir}/share/clusterware
