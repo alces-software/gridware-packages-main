@@ -32,21 +32,14 @@
 :changelog: |
   * Mon May  8 2017 - Mark J. Titorenko <mark.titorenko@alces-software.com>
     - Add library directory to LD_LIBRARY_PATH
-  * Mon Apr  4 2016 - Mark J. Titorenko <mark.titorenko@alces-software.com>
-    - Upgrade to latest v4.4 release
-  * Wed Jun 24 2015 - Mark J. Titorenko <mark.titorenko@alces-software.com>
-    - Upgrade to latest v4.3 release
   * Thu Aug 29 2013 - Mark J. Titorenko <mark.titorenko@alces-software.com>
     - First created
-:src: tbb44_20160128oss_src_0.tgz
-:src_dir: tbb44_20160128oss
+:src: tbb41_20130613oss_src.tgz
+:src_dir: tbb41_20130613oss
 :type: libs
-:version: '4.4.20160128'
+:version: '4.1.20130613'
 :compilers:
   gcc:
-:dependencies:
-  el:
-    - gcc-c++
 :compile: |
   make <%= redirect(:make) %>
 :install: |
